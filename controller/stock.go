@@ -52,7 +52,7 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 	defer func(formZipFile multipart.File) {
 		err := formZipFile.Close()
 		if err != nil {
-			errorMessage := "error formZipFile.Close()"
+			errorMessage := "error formZipFile.ClosePrice()"
 			log.Println(errorMessage, err)
 			resp := model.NewErrorResponse(errorMessage, err)
 			helper.ResponseFormatter(w, http.StatusInternalServerError, resp)
@@ -82,7 +82,7 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 	// open fileInZip
 	zipFile, err := formZipFileHeader.Open()
 	if err != nil {
-		errorMessage := "error Open fileInZip"
+		errorMessage := "error OpenPrice fileInZip"
 		log.Println(errorMessage, err)
 		resp := model.NewErrorResponse(errorMessage, err)
 		helper.ResponseFormatter(w, http.StatusInternalServerError, resp)
@@ -92,7 +92,7 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 	defer func(zipFile multipart.File) {
 		err := zipFile.Close()
 		if err != nil {
-			errorMessage := "error fileInZip.Close()"
+			errorMessage := "error fileInZip.ClosePrice()"
 			log.Println(errorMessage, err)
 			resp := model.NewErrorResponse(errorMessage, err)
 			helper.ResponseFormatter(w, http.StatusInternalServerError, resp)
@@ -131,7 +131,7 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 		// open ndjson File
 		ndjsonFile, err := fileInZip.Open()
 		if err != nil {
-			errorMessage := "error Open ndjsonFile"
+			errorMessage := "error OpenPrice ndjsonFile"
 			log.Println(errorMessage, err)
 			resp := model.NewErrorResponse(errorMessage, err)
 			helper.ResponseFormatter(w, http.StatusInternalServerError, resp)
@@ -141,7 +141,7 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 		defer func(ndjsonFile io.ReadCloser) {
 			err := ndjsonFile.Close()
 			if err != nil {
-				errorMessage := "error ndjsonFile.Close()"
+				errorMessage := "error ndjsonFile.ClosePrice()"
 				log.Println(errorMessage, err)
 				resp := model.NewErrorResponse(errorMessage, err)
 				helper.ResponseFormatter(w, http.StatusInternalServerError, resp)

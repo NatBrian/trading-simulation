@@ -18,13 +18,16 @@ type IndexMember struct {
 }
 
 type Summary struct {
-	StockCode string   `json:"stock_code"`
-	IndexCode []string `json:"index_code"`
-	Open      int64    `json:"open"`
-	High      int64    `json:"high"`
-	Low       int64    `json:"low"`
-	Close     int64    `json:"close"`
-	Prev      int64    `json:"prev"`
+	StockCode     string   `json:"stock_code"`
+	IndexCode     []string `json:"index_code"`
+	PreviousPrice int64    `json:"previous_price"`
+	OpenPrice     int64    `json:"open_price"`
+	HighestPrice  int64    `json:"highest_price"`
+	LowestPrice   int64    `json:"lowest_price"`
+	ClosePrice    int64    `json:"close_proce"`
+	Volume        int64    `json:"volume"`
+	Value         int64    `json:"value"`
+	AveragePrice  int64    `json:"average_price"`
 }
 
 var (
