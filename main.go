@@ -15,7 +15,7 @@ func main() {
 		panic(err)
 	}
 
-	httpRouter := infrastructure.ServeHTTP()
+	httpRouter := infrastructure.ServeHTTP(app)
 
 	log.Println("ListenAndServe: " + app.Config.HTTPHost + ":" + app.Config.HTTPPort)
 	err = http.ListenAndServe(app.Config.HTTPHost+":"+app.Config.HTTPPort, httpRouter)

@@ -11,6 +11,7 @@ type (
 	Config struct {
 		HTTPPort string `mapstructure:"HTTP_PORT"`
 		HTTPHost string `mapstructure:"HTTP_HOST"`
+		MaxZipMb int    `mapstructure:"MAX_ZIP_MB"`
 	}
 )
 
@@ -30,5 +31,6 @@ func LoadConfig() (Config, error) {
 	return Config{
 		HTTPPort: viper.GetString("HTTP_PORT"),
 		HTTPHost: viper.GetString("HTTP_HOST"),
+		MaxZipMb: viper.GetInt("MAX_ZIP_MB"),
 	}, nil
 }
