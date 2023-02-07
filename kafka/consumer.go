@@ -153,7 +153,10 @@ func (k *KafkaGoConsumer) Close() {
 				wg.Add(1)
 
 				go func() {
-					consumer.(*kafkaGo.Reader).Close()
+					err := consumer.(*kafkaGo.Reader).Close()
+					if err != nil {
+						return
+					}
 					wg.Done()
 				}()
 			}

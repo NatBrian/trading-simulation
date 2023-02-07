@@ -152,7 +152,7 @@ func (ss *StockService) CalculateOhlc(stockCodes []string, changeRecords []model
 		indexCodeByte, err := ss.Redis.Get(ss.Context, code+model.RedisKeyIndexCode).Bytes()
 		if err == nil {
 			var indexCode []string
-			err := json.Unmarshal(indexCodeByte, &indexCode)
+			err = json.Unmarshal(indexCodeByte, &indexCode)
 			if err != nil {
 				log.Error().Err(err).Msg("error marshal indexCode")
 				return nil, err
