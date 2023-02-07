@@ -3,6 +3,7 @@ package instructions
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 )
 
 type ChangeRecord struct {
@@ -28,62 +29,80 @@ type Summary struct {
 
 var result = map[string]Summary{}
 
-func ohlc(x []string, w []ChangeRecord, p []IndexMember) map[string]Summary {
-	for _, y := range x {
-		found, not := result[y]
-		if not {
-			found = Summary{}
+func removeDuplicateString(oldList []string) []string {
+	keys := make(map[string]bool)
+	var newList []string
+
+	for _, entry := range oldList {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			newList = append(newList, entry)
 		}
-		found.StockCode = y
-		for _, u := range w {
-			if u.StockCode == y {
-				if u.Quantity == 0 {
-					found.Prev = u.Price
-					fmt.Println("done")
-					fmt.Println("price updated")
-					result[y] = found
-				} else if u.Quantity > 0 && result[y].Open == 0 {
-					found.Open = u.Price
-					fmt.Println("done")
-					fmt.Println("price updated")
-					result[y] = found
+	}
+	return newList
+}
+
+func ohlc(changeRecords []ChangeRecord, indexMembers []IndexMember) map[string]Summary {
+	var stockCodes []string
+	for _, record := range changeRecords {
+		stockCodes = append(stockCodes, record.StockCode)
+	}
+
+	stockCodes = removeDuplicateString(stockCodes)
+
+	for _, code := range stockCodes {
+		// not found then init code Summary
+		entry, found := result[code]
+		if !found {
+			entry = Summary{
+				StockCode: code,
+				Low:       math.MaxInt64,
+			}
+		}
+
+		for _, record := range changeRecords {
+			if record.StockCode == code {
+				var (
+					quantity int64
+					price    int64
+				)
+
+				quantity = record.Quantity
+				price = record.Price
+
+				// assign prices
+				if quantity == 0 {
+					entry.Prev = price
+				} else if quantity > 0 && entry.Open == 0 {
+					entry.Open = price
 				} else {
-					found.Close = u.Price
-					if found.High < u.Price {
-						found.High = u.Price
+					entry.Close = price
+					if entry.High < price {
+						entry.High = price
 					}
-					if found.Low > u.Price {
-						found.Low = u.Price
+					if entry.Low > price {
+						entry.Low = price
 					}
-					fmt.Println("done")
-					fmt.Println("price updated")
-					result[y] = found
 				}
-			} else {
-				fmt.Println("done")
-				fmt.Println("price updated")
-				result[y] = found
 			}
 		}
-		for _, i := range p {
-			if i.StockCode == y {
-				found.IndexCode = append(found.IndexCode, i.IndexCode)
-				fmt.Println("index updated")
-				result[y] = found
-			} else {
-				fmt.Println("index updated")
-				result[y] = found
+
+		for _, indexMember := range indexMembers {
+			if indexMember.StockCode == code {
+				entry.IndexCode = append(entry.IndexCode, indexMember.IndexCode)
 			}
 		}
+
+		result[code] = entry
 	}
 
 	return result
 }
 
 func main() {
-	x := []string{
-		"BBCA", "BBRI", "ASII", "GOTO",
-	}
+	// x := []string{
+	//	"BBCA", "BBRI", "ASII", "GOTO",
+	// }
 	w := []ChangeRecord{
 		{
 			StockCode: "BBCA",
@@ -232,7 +251,7 @@ func main() {
 			IndexCode: "KOMPAS100",
 		},
 	}
-	r := ohlc(x, w, p)
+	r := ohlc(w, p)
 	for _, v := range r {
 		jss, _ := json.Marshal(v)
 		fmt.Println("summary: ", string(jss))

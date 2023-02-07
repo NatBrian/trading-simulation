@@ -51,7 +51,7 @@ func consume(app application.App, topic string, handler func(kafka.Message) erro
 				break
 			}
 			success = true
-			log.Info().Msg("message has been successfuly processed, " + dataStr)
+			log.Info().Msg("message has been successfully processed, " + dataStr)
 		}
 
 		if !success {

@@ -60,7 +60,7 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 	}
 
 	defer func(formZipFile multipart.File) {
-		err := formZipFile.Close()
+		err = formZipFile.Close()
 		if err != nil {
 			errorMessage := "error formZipFile.ClosePrice()"
 			log.Error().Err(err).Msg(errorMessage)
@@ -100,7 +100,7 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 	}
 
 	defer func(zipFile multipart.File) {
-		err := zipFile.Close()
+		err = zipFile.Close()
 		if err != nil {
 			errorMessage := "error fileInZip.ClosePrice()"
 			log.Error().Err(err).Msg(errorMessage)
@@ -144,7 +144,7 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 		}
 
 		defer func(ndjsonFile io.ReadCloser) {
-			err := ndjsonFile.Close()
+			err = ndjsonFile.Close()
 			if err != nil {
 				errorMessage := "error ndjsonFile.ClosePrice()"
 				log.Error().Err(err).Msg(errorMessage)
@@ -158,22 +158,20 @@ func (sc *StockController) UploadTransaction(w http.ResponseWriter, r *http.Requ
 
 		var (
 			changeRecords []model.ChangeRecordInput
-			stockCodes    []string
 		)
 
 		// read each json line in ndjson
 		for ndjsonReader.Next() {
 			var changeRecord model.ChangeRecordInput
-			if err := ndjsonReader.Decode(&changeRecord); err != nil {
+			if err = ndjsonReader.Decode(&changeRecord); err != nil {
 				errorMessage := "error Decode changeRecord"
 				log.Error().Err(err).Msg(errorMessage)
 				// continue to next fileInZip which has correct struct
 			}
 
 			changeRecords = append(changeRecords, changeRecord)
-			stockCodes = append(stockCodes, changeRecord.StockCode)
 		}
-		if err := ndjsonReader.Err(); err != nil {
+		if err = ndjsonReader.Err(); err != nil {
 			errorMessage := "error ndjsonReader"
 			log.Error().Err(err).Msg(errorMessage)
 			resp := model.NewErrorResponse(errorMessage, err)
