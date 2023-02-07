@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "./";
+
+message ChangeRecord {
+  string type = 1;
+  string  order_number = 2;
+  string order_verb = 3;
+  int64 quantity = 4;
+  int64 executed_quantity = 5;
+  string order_book = 6;
+  int64 price = 7;
+  int64 execution_price = 8;
+  string stock_code = 9;
+}
+
+message ChangeRecords {
+  repeated  ChangeRecord change_records = 1;
+}

@@ -1,26 +1,35 @@
 package main
 
 import (
-	"log"
+	"context"
+	"fmt"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/NatBrian/Stockbit-Golang-Challenge/application"
 	"github.com/NatBrian/Stockbit-Golang-Challenge/infrastructure"
 )
 
 func main() {
-	app, err := application.SetupApp()
+	ctx, cancel := context.WithCancel(context.Background())
+	app, err := application.SetupApp(ctx)
 	if err != nil {
-		log.Println("error: SetupApp", err)
+		log.Error().Err(err).Msg("error: SetupApp")
 		panic(err)
 	}
+	defer func() {
+		cancel()
+	}()
+
+	infrastructure.ConsumeMessages(app)
 
 	httpRouter := infrastructure.ServeHTTP(app)
 
-	log.Println("ListenAndServe: " + app.Config.HTTPHost + ":" + app.Config.HTTPPort)
-	err = http.ListenAndServe(app.Config.HTTPHost+":"+app.Config.HTTPPort, httpRouter)
+	log.Info().Msg(fmt.Sprintf("ListenAndServe: " + app.Config.Constants.HTTPHost + ":" + app.Config.Constants.HTTPPort))
+	err = http.ListenAndServe(app.Config.Constants.HTTPHost+":"+app.Config.Constants.HTTPPort, httpRouter)
 	if err != nil {
-		log.Println("error: ListenAndServe", err)
+		log.Error().Err(err).Msg("error: ListenAndServe")
 		return
 	}
 }

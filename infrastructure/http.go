@@ -1,8 +1,6 @@
 package infrastructure
 
 import (
-	"net/http"
-
 	"github.com/NatBrian/Stockbit-Golang-Challenge/application"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -15,10 +13,9 @@ func ServeHTTP(app application.App) *chi.Mux {
 
 	r.Use(middleware.Logger)
 
-	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
-		_, _ = w.Write([]byte("ok"))
-	})
+	r.Get("/ping", dep.HealthContoller.Ping)
 	r.Post("/upload", dep.StockController.UploadTransaction)
+	r.Get("/summary", dep.StockController.GetSummary)
 
 	return r
 }
