@@ -105,8 +105,5 @@ kafka-topics --bootstrap-server broker:9092 \
 
 4. `protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative proto/*.proto`
 
-  
-
 # Run Program
-
 `Make run`
