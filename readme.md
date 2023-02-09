@@ -108,8 +108,4 @@ kafka-topics --bootstrap-server broker:9092 \
   
 
 # Run Program
-<<<<<<< HEAD
-=======
-
->>>>>>> 89c80cf... update readme
 `Make run`
